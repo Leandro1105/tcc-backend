@@ -1,0 +1,114 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Tipo {
+  Psicologo
+  Paciente
+}
+
+enum Status {
+  Pendente
+  Pago
+}
+
+model Usuario {
+  id String @id @default(uuid())
+  nome String
+  cpf String
+  crp String?
+  telefone String
+  email String @unique
+  senha String
+  tipo Tipo
+
+  consultasPaciente Atendimento[] @relation("Consultas do paciente")
+  consultasPsicologo Atendimento[] @relation("Consultas do psicologo")
+
+  humor   Humor[]
+  atividades Atividade[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("usuarios")
+  @@index([email], name: "idx_email")
+}
+
+model Atendimento {
+  id String @id @default(uuid())
+  data DateTime
+  observacoes String
+  pacienteId String
+  psicologoId String
+
+  paciente Usuario @relation("Consultas do paciente", fields: [pacienteId], references: [id])
+  psicologo Usuario @relation("Consultas do psicologo", fields: [psicologoId], references: [id])
+
+  pagamentos Pagamento[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("atendimentos")
+}
+
+model Pagamento {
+  id String @id @default(uuid())
+  valor Float
+  data DateTime
+  dataVencimento DateTime
+  parcela Int
+  status Status
+  atendimentoId String
+
+  atendimento Atendimento @relation(fields: [atendimentoId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("pagamentos")
+}
+
+model Humor {
+  id String @id @default(uuid())
+  data DateTime
+  escala Int
+  observacoes String
+  pacienteId String
+
+  paciente Usuario @relation(fields: [pacienteId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("humor")
+}
+
+model Atividade {
+  id String @id @default(uuid())
+  tipo String
+  descricao String
+  data DateTime
+  impacto Int
+  pacienteId String
+
+  paciente Usuario @relation(fields: [pacienteId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("atividades")
+}
