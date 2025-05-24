@@ -24,29 +24,51 @@ enum Status {
   Pago
 }
 
-model Usuario {
+model Psicologo {
   id String @id @default(uuid())
   nome String
-  cpf String
-  crp String?
+  cpf String @unique
+  crp String
   telefone String
   email String @unique
   senha String
-  tipo Tipo
+  role Tipo @default(Psicologo)
 
-  consultasPaciente Atendimento[] @relation("Consultas do paciente")
-  consultasPsicologo Atendimento[] @relation("Consultas do psicologo")
+  consultas Atendimento[] @relation("Consultas do psicologo")
 
+  pacientes Paciente[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("psicologos")
+  @@index([email], name: "idx_email_psicologo")
+}
+
+model Paciente {
+  id String @id @default(uuid())
+  nome String
+  cpf String @unique
+  dataNascimento DateTime
+  telefone String
+  email String @unique
+  senha String
+  role Tipo @default(Paciente)
+
+  psicologoId String?
+
+  psicologo Psicologo? @relation(fields: [psicologoId], references: [id])
+
+  consultas Atendimento[] @relation("Consultas do paciente")
   humor   Humor[]
   atividades Atividade[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("usuarios")
-  @@index([email], name: "idx_email")
+  @@map("pacientes")
+  @@index([email], name: "idx_email_paciente")
 }
-
 model Atendimento {
   id String @id @default(uuid())
   data DateTime
@@ -54,8 +76,8 @@ model Atendimento {
   pacienteId String
   psicologoId String
 
-  paciente Usuario @relation("Consultas do paciente", fields: [pacienteId], references: [id])
-  psicologo Usuario @relation("Consultas do psicologo", fields: [psicologoId], references: [id])
+  paciente Paciente @relation("Consultas do paciente", fields: [pacienteId], references: [id])
+  psicologo Psicologo @relation("Consultas do psicologo", fields: [psicologoId], references: [id])
 
   pagamentos Pagamento[]
 
@@ -89,7 +111,7 @@ model Humor {
   observacoes String
   pacienteId String
 
-  paciente Usuario @relation(fields: [pacienteId], references: [id])
+  paciente Paciente @relation(fields: [pacienteId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -105,7 +127,7 @@ model Atividade {
   impacto Int
   pacienteId String
 
-  paciente Usuario @relation(fields: [pacienteId], references: [id])
+  paciente Paciente @relation(fields: [pacienteId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
