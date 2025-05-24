@@ -6,12 +6,12 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { PrismaService } from 'src/common/prisma.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { AuthController } from './auth.controller';
-import { PacientsModule } from '../pacients';
+import { PatientsModule } from '../patients';
 
 @Module({
   imports: [
     PassportModule,
-    PacientsModule,
+    PatientsModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '30d' },

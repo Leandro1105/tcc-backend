@@ -3,8 +3,9 @@ import { APP_GUARD, RouterModule } from '@nestjs/core';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtAuthGuard } from './modules/auth/guards/jwt.guard';
 import { RolesGuard } from './modules/auth/roles/roles.guard';
-import { PacientsModule } from './modules/pacients';
+import { PatientsModule } from './modules/patients';
 import { PrismaService } from './common/prisma.service';
+import { DoctorsModule } from './modules/doctors';
 
 @Module({
   imports: [
@@ -15,11 +16,16 @@ import { PrismaService } from './common/prisma.service';
       },
       {
         path: '/pacientes',
-        module: PacientsModule,
+        module: PatientsModule,
+      },
+      {
+        path: 'psicologos',
+        module: DoctorsModule,
       },
     ]),
     AuthModule,
-    PacientsModule,
+    PatientsModule,
+    DoctorsModule,
   ],
   controllers: [],
   providers: [
