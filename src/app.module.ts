@@ -6,6 +6,10 @@ import { RolesGuard } from './modules/auth/roles/roles.guard';
 import { PatientsModule } from './modules/patients';
 import { PrismaService } from './common/prisma.service';
 import { DoctorsModule } from './modules/doctors';
+import { ConsultationsModule } from './modules/consultations/consultations.module';
+import { HumorModule } from './modules/humor/humor.module';
+import { ActivitiesModule } from './modules/activities/activities.module';
+import { FinancialModule } from './modules/financial/financial.module';
 
 @Module({
   imports: [
@@ -22,10 +26,30 @@ import { DoctorsModule } from './modules/doctors';
         path: 'psicologos',
         module: DoctorsModule,
       },
+      {
+        path: 'consultas',
+        module: ConsultationsModule,
+      },
+      {
+        path: 'humor',
+        module: HumorModule,
+      },
+      {
+        path: 'atividades',
+        module: ActivitiesModule,
+      },
+      {
+        path: 'financeiro',
+        module: FinancialModule,
+      },
     ]),
     AuthModule,
     PatientsModule,
     DoctorsModule,
+    ConsultationsModule,
+    HumorModule,
+    ActivitiesModule,
+    FinancialModule,
   ],
   controllers: [],
   providers: [

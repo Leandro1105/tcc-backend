@@ -1,15 +1,11 @@
 import {
-  IsDate,
   IsDateString,
   IsEmail,
-  IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
-  Max,
-  Min,
 } from 'class-validator';
-import { Prisma, Tipo } from 'generated/prisma';
+import { Tipo } from 'generated/prisma';
 
 export class CreatePacienteDto {
   @IsNotEmpty()
@@ -52,52 +48,4 @@ export class UpdatePacienteDto {
   @IsOptional()
   @IsString()
   telefone?: string;
-}
-
-export class CreateActivityDto implements Prisma.AtividadeCreateInput {
-  @IsString()
-  @IsNotEmpty()
-  tipo: string;
-
-  @IsString()
-  @IsNotEmpty()
-  descricao: string;
-
-  @IsDate()
-  @IsNotEmpty()
-  data: Date;
-
-  @IsInt()
-  @Min(1, { message: 'O valor mínimo permitido é 1.' })
-  @Max(5, { message: 'O valor máximo permitido é 5.' })
-  @IsNotEmpty()
-  impacto: number;
-
-  @IsString()
-  @IsNotEmpty()
-  pacienteId: string;
-
-  paciente: Prisma.PacienteCreateNestedOneWithoutAtividadesInput;
-}
-
-export class CreateHumorDto implements Prisma.HumorCreateInput {
-  @IsDate()
-  @IsNotEmpty()
-  data: Date;
-
-  @IsInt()
-  @Min(1, { message: 'O valor mínimo permitido é 1.' })
-  @Max(5, { message: 'O valor máximo permitido é 5.' })
-  @IsNotEmpty()
-  escala: number;
-
-  @IsString()
-  @IsNotEmpty()
-  observacoes: string;
-
-  @IsString()
-  @IsNotEmpty()
-  pacienteId: string;
-
-  paciente: Prisma.PacienteCreateNestedOneWithoutAtividadesInput;
 }

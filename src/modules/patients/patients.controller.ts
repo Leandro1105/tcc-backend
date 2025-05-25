@@ -16,18 +16,18 @@ import { Role } from '../auth/enums/role.enum';
 export class PatientsController {
   constructor(private readonly patientsService: PatientsService) {}
 
+  @Roles(Role.Psicologo)
   @Get('')
   async findAll() {
     return this.patientsService.findAll();
   }
 
+  @Roles(Role.Psicologo)
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.patientsService.findOne(id);
   }
 
-  //Apenas usuários com a role de Psicologo podem criar usuários
-  @Roles(Role.Psicologo)
   @Post('')
   async create(@Body() data: CreatePacienteDto) {
     return this.patientsService.create(data);
@@ -40,6 +40,7 @@ export class PatientsController {
     return user;
   }
 
+  @Roles(Role.Psicologo)
   @Delete(':id')
   async delete(@Param('id') id: string) {
     return this.patientsService.delete(id);

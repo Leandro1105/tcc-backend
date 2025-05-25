@@ -1,11 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/common/prisma.service';
-import {
-  CreateActivityDto,
-  CreateHumorDto,
-  CreatePacienteDto,
-  UpdatePacienteDto,
-} from './dto/Patient.dto';
+import { CreatePacienteDto, UpdatePacienteDto } from './dto/Patient.dto';
 import * as bcrypt from 'bcrypt';
 import { Paciente } from 'generated/prisma';
 
@@ -71,40 +66,5 @@ export class PatientsService {
 
   async delete(id: string): Promise<Omit<Paciente, 'senha'>> {
     return this.prisma.paciente.delete({ where: { id } });
-  }
-
-  async registerActivity(activity: CreateActivityDto) {
-    const { pacienteId, ...data } = activity;
-
-    return this.prisma.atividade.create({
-      data: {
-        ...data,
-        paciente: { connect: { id: pacienteId } },
-      },
-      select: {
-        id: true,
-        tipo: true,
-        descricao: true,
-        data: true,
-        pacienteId: true,
-      },
-    });
-  }
-
-  async registerHumor(humor: CreateHumorDto) {
-    const { pacienteId, ...data } = humor;
-
-    return this.prisma.humor.create({
-      data: {
-        ...data,
-        paciente: { connect: { id: pacienteId } },
-      },
-      select: {
-        id: true,
-        escala: true,
-        data: true,
-        pacienteId: true,
-      },
-    });
   }
 }
