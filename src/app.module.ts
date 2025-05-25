@@ -1,15 +1,17 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD, RouterModule } from '@nestjs/core';
-import { AuthModule } from './modules/auth/auth.module';
 import { JwtAuthGuard } from './modules/auth/guards/jwt.guard';
 import { RolesGuard } from './modules/auth/roles/roles.guard';
-import { PatientsModule } from './modules/patients';
 import { PrismaService } from './common/prisma.service';
-import { DoctorsModule } from './modules/doctors';
-import { ConsultationsModule } from './modules/consultations/consultations.module';
-import { HumorModule } from './modules/humor/humor.module';
-import { ActivitiesModule } from './modules/activities/activities.module';
-import { FinancialModule } from './modules/financial/financial.module';
+import {
+  ActivitiesModule,
+  ConsultationsModule,
+  DoctorsModule,
+  FinancialModule,
+  HumorModule,
+  PatientsModule,
+} from './modules';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
