@@ -11,6 +11,7 @@ import { DoctorsService } from './doctors.service';
 import { CreateDoctorDto, UpdateDoctorDto } from './dto/Doctor.dto';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '../auth/enums/role.enum';
+import { Public } from '../auth/decorators/is-public.decorator';
 
 @Controller('')
 export class DoctorsController {
@@ -28,7 +29,7 @@ export class DoctorsController {
     return this.doctorsService.findOne(id);
   }
 
-  @Roles(Role.Psicologo)
+  @Public()
   @Post('')
   async create(@Body() data: CreateDoctorDto) {
     return this.doctorsService.create(data);

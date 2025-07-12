@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsDate,
   IsInt,
@@ -10,6 +11,7 @@ import {
 import { Prisma } from 'generated/prisma';
 
 export class CreateHumorDto implements Prisma.HumorCreateInput {
+  @Type(() => Date)
   @IsDate()
   @IsNotEmpty()
   data: Date;
@@ -32,10 +34,6 @@ export class CreateHumorDto implements Prisma.HumorCreateInput {
 }
 
 export class UpdateHumorDto implements Prisma.HumorUpdateInput {
-  @IsDate()
-  @IsOptional()
-  data?: Date;
-
   @IsInt()
   @Min(1, { message: 'O valor mínimo permitido é 1.' })
   @Max(5, { message: 'O valor máximo permitido é 5.' })

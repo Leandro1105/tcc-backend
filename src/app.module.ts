@@ -25,23 +25,23 @@ import { AuthModule } from './modules/auth/auth.module';
         module: PatientsModule,
       },
       {
-        path: 'psicologos',
+        path: '/psicologos',
         module: DoctorsModule,
       },
       {
-        path: 'consultas',
+        path: '/consultas',
         module: ConsultationsModule,
       },
       {
-        path: 'humor',
+        path: '/humor',
         module: HumorModule,
       },
       {
-        path: 'atividades',
+        path: '/atividades',
         module: ActivitiesModule,
       },
       {
-        path: 'financeiro',
+        path: '/financeiro',
         module: FinancialModule,
       },
     ]),

@@ -18,14 +18,23 @@ export class HumorService {
         id: true,
         escala: true,
         data: true,
+        observacoes: true,
         pacienteId: true,
       },
     });
   }
 
   async getHumorByPacienteId(pacienteId: string) {
+    const fifteenDaysAgo = new Date();
+    fifteenDaysAgo.setDate(fifteenDaysAgo.getDate() - 15);
+
     return this.prisma.humor.findMany({
-      where: { pacienteId },
+      where: {
+        pacienteId,
+        data: {
+          gte: fifteenDaysAgo,
+        },
+      },
       orderBy: { data: 'desc' },
     });
   }

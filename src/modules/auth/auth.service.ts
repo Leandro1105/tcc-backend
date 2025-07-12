@@ -34,4 +34,30 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
     };
   }
+
+  async getProfile(userId: string) {
+    const paciente = await this.prisma.paciente.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        nome: true,
+        role: true,
+      },
+    });
+    if (paciente) {
+      return paciente;
+    }
+    const psicologo = await this.prisma.psicologo.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        nome: true,
+        role: true,
+      },
+    });
+    if (psicologo) {
+      return psicologo;
+    }
+    return null;
+  }
 }
