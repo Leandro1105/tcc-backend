@@ -6,6 +6,7 @@ import { PrismaService } from './common/prisma.service';
 import {
   ActivitiesModule,
   ConsultationsModule,
+  DashboardModule,
   DoctorsModule,
   FinancialModule,
   HumorModule,
@@ -44,6 +45,10 @@ import { AuthModule } from './modules/auth/auth.module';
         path: '/financeiro',
         module: FinancialModule,
       },
+      {
+        path: '/dashboard',
+        module: DashboardModule,
+      },
     ]),
     AuthModule,
     PatientsModule,
@@ -52,6 +57,7 @@ import { AuthModule } from './modules/auth/auth.module';
     HumorModule,
     ActivitiesModule,
     FinancialModule,
+    DashboardModule,
   ],
   controllers: [],
   providers: [

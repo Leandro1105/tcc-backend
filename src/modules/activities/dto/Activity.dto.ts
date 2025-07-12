@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsDate,
   IsInt,
@@ -18,6 +19,7 @@ export class CreateActivityDto implements Prisma.AtividadeCreateInput {
   @IsNotEmpty()
   descricao: string;
 
+  @Type(() => Date)
   @IsDate()
   @IsNotEmpty()
   data: Date;
@@ -43,10 +45,6 @@ export class UpdateActivityDto implements Prisma.AtividadeUpdateInput {
   @IsString()
   @IsOptional()
   descricao?: string;
-
-  @IsDate()
-  @IsOptional()
-  data?: Date;
 
   @IsInt()
   @Min(1, { message: 'O valor mínimo permitido é 1.' })
