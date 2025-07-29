@@ -35,7 +35,6 @@ model Psicologo {
   role Tipo @default(Psicologo)
 
   consultas Atendimento[] @relation("Consultas do psicologo")
-
   pacientes Paciente[]
 
   createdAt DateTime @default(now())
@@ -55,13 +54,10 @@ model Paciente {
   senha String
   role Tipo @default(Paciente)
 
-  psicologoId String?
-
-  psicologo Psicologo? @relation(fields: [psicologoId], references: [id])
-
   consultas Atendimento[] @relation("Consultas do paciente")
   humor   Humor[]
   atividades Atividade[]
+  psicologos Psicologo[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -16,6 +16,19 @@ export class ConsultationsService {
       },
       include: {
         psicologo: true,
+        pagamentos: true,
+      },
+    });
+  }
+
+  async getConsultationsByPsychologistId(psychologistId: string) {
+    return this.prisma.atendimento.findMany({
+      where: {
+        psicologoId: psychologistId,
+      },
+      include: {
+        paciente: true,
+        pagamentos: true,
       },
     });
   }
@@ -27,6 +40,7 @@ export class ConsultationsService {
       },
       include: {
         psicologo: true,
+        pagamentos: true,
       },
     });
   }

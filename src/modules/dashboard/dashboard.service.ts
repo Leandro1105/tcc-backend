@@ -302,8 +302,13 @@ export class DashboardService {
   }
 
   private async getHumoresPacientes(psicologoId: string) {
+    // Busca pacientes que têm relação com este psicólogo
     const pacientes = await this.prisma.paciente.findMany({
-      where: { psicologoId },
+      where: {
+        psicologos: {
+          some: { id: psicologoId },
+        },
+      },
       include: { humor: true },
     });
 
@@ -357,8 +362,13 @@ export class DashboardService {
   }
 
   private async getEvolucaoPacientes(psicologoId: string, desde: Date) {
+    // Busca pacientes que têm relação com este psicólogo
     const pacientes = await this.prisma.paciente.findMany({
-      where: { psicologoId },
+      where: {
+        psicologos: {
+          some: { id: psicologoId },
+        },
+      },
       include: {
         consultas: {
           where: { data: { gte: desde } },
@@ -444,8 +454,13 @@ export class DashboardService {
       },
     });
 
+    // Busca pacientes que têm relação com este psicólogo
     const pacientes = await this.prisma.paciente.findMany({
-      where: { psicologoId },
+      where: {
+        psicologos: {
+          some: { id: psicologoId },
+        },
+      },
       include: {
         humor: {
           where: { data: { gte: lastMonth, lt: thisMonth } },

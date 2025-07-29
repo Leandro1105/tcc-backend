@@ -6,15 +6,23 @@ import { CreateFinancialDto, UpdateFinancialDto } from './dto/Financial.dto';
 export class FinancialService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getPatientPayments(patientId: string) {
+  async getPsychologistPayments(psicologoId: string) {
     return this.prisma.pagamento.findMany({
       where: {
         atendimento: {
-          pacienteId: patientId,
+          psicologoId: psicologoId,
         },
       },
       include: {
-        atendimento: true,
+        atendimento: {
+          include: {
+            paciente: {
+              select: {
+                nome: true,
+              },
+            },
+          },
+        },
       },
     });
   }

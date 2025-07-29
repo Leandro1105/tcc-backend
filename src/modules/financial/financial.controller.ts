@@ -9,9 +9,9 @@ export class FinancialController {
   constructor(private readonly financialService: FinancialService) {}
 
   @Roles(Role.Psicologo)
-  @Get('paciente/:pacienteId')
-  async getPatientPayments(@Param('pacienteId') pacienteId: string) {
-    return this.financialService.getPatientPayments(pacienteId);
+  @Get('psicologo/:psicologoId')
+  async getPsychologistPayments(@Param('psicologoId') psicologoId: string) {
+    return this.financialService.getPsychologistPayments(psicologoId);
   }
 
   @Roles(Role.Psicologo)

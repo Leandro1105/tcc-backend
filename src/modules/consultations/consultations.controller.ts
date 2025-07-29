@@ -16,10 +16,16 @@ import { CreateConsultationDto } from './dto/Consultation.dto';
 export class ConsultationsController {
   constructor(private readonly consultationsService: ConsultationsService) {}
 
-  @Roles(Role.Psicologo)
+  @Roles(Role.Paciente)
   @Get('paciente/:id')
   async getConsultationsByPatientId(@Param('id') id: string) {
     return this.consultationsService.getConsultationsByPatientId(id);
+  }
+
+  @Roles(Role.Paciente)
+  @Get('paciente/:id')
+  async getConsultationsByPsychologistId(@Param('id') id: string) {
+    return this.consultationsService.getConsultationsByPsychologistId(id);
   }
 
   @Roles(Role.Psicologo)
