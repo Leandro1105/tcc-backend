@@ -35,7 +35,7 @@ model Psicologo {
   role Tipo @default(Psicologo)
 
   consultas Atendimento[] @relation("Consultas do psicologo")
-  pacientes Paciente[]
+  pacientes PsicologoPaciente[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -57,13 +57,23 @@ model Paciente {
   consultas Atendimento[] @relation("Consultas do paciente")
   humor   Humor[]
   atividades Atividade[]
-  psicologos Psicologo[]
+  psicologos PsicologoPaciente[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("pacientes")
   @@index([email], name: "idx_email_paciente")
+}
+model PsicologoPaciente {
+  id           String     @id @default(uuid())
+  psicologoId  String
+  pacienteId   String
+
+  psicologo    Psicologo  @relation(fields: [psicologoId], references: [id])
+  paciente     Paciente   @relation(fields: [pacienteId], references: [id])
+
+  @@unique([psicologoId, pacienteId])
 }
 model Atendimento {
   id String @id @default(uuid())

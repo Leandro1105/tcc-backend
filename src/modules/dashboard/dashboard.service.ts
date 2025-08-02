@@ -306,7 +306,7 @@ export class DashboardService {
     const pacientes = await this.prisma.paciente.findMany({
       where: {
         psicologos: {
-          some: { id: psicologoId },
+          some: { psicologoId: psicologoId },
         },
       },
       include: { humor: true },
@@ -366,7 +366,7 @@ export class DashboardService {
     const pacientes = await this.prisma.paciente.findMany({
       where: {
         psicologos: {
-          some: { id: psicologoId },
+          some: { psicologoId: psicologoId },
         },
       },
       include: {
@@ -458,7 +458,7 @@ export class DashboardService {
     const pacientes = await this.prisma.paciente.findMany({
       where: {
         psicologos: {
-          some: { id: psicologoId },
+          some: { psicologoId: psicologoId },
         },
       },
       include: {

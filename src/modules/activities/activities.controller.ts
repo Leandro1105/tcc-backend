@@ -27,9 +27,10 @@ export class ActivitiesController {
     return this.activitiesService.getActivitiesByPacienteId(pacienteId);
   }
 
-  @Get(':id')
-  async getActivityById(@Param('id') id: string) {
-    return this.activitiesService.getActivityById(id);
+  @Roles(Role.Psicologo)
+  @Get('psicologo/:id')
+  async getActivitiesFromPatients(@Param('id') id: string) {
+    return this.activitiesService.getActivitiesFromPatients(id);
   }
 
   @Roles(Role.Paciente)

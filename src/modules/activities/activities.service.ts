@@ -31,17 +31,40 @@ export class ActivitiesService {
     });
   }
 
-  async getActivityById(id: string) {
-    return this.prisma.atividade.findUnique({
-      where: { id },
-      select: {
-        id: true,
-        tipo: true,
-        descricao: true,
-        data: true,
-        pacienteId: true,
+  async getActivitiesFromPatients(psicologoId: string) {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+    const psicologoPacientes = await this.prisma.psicologoPaciente.findMany({
+      where: { psicologoId },
+      include: {
+        paciente: {
+          include: {
+            atividades: {
+              where: {
+                data: {
+                  gte: oneWeekAgo,
+                },
+              },
+              orderBy: { data: 'desc' },
+            },
+          },
+        },
       },
     });
+
+    return psicologoPacientes.map((pp) => ({
+      id: pp.paciente.id,
+      nome: pp.paciente.nome,
+      atividades: pp.paciente.atividades.map((atividade) => ({
+        id: atividade.id,
+        titulo: atividade.tipo,
+        descricao: atividade.descricao,
+        data: atividade.data.toISOString(),
+        categoria: atividade.tipo,
+        pacienteId: atividade.pacienteId,
+      })),
+    }));
   }
 
   async deleteActivity(id: string) {

@@ -22,14 +22,16 @@ export class HumorController {
     return this.humorService.registerHumor(data);
   }
 
+  @Roles(Role.Paciente)
   @Get('paciente/:pacienteId')
   async getHumorByPacienteId(@Param('pacienteId') pacienteId: string) {
     return this.humorService.getHumorByPacienteId(pacienteId);
   }
 
-  @Get(':id')
-  async getHumorById(@Param('id') id: string) {
-    return this.humorService.getHumorById(id);
+  @Roles(Role.Psicologo)
+  @Get('psicologo/:psicologoId')
+  async getHumorFromPatients(@Param('psicologoId') psicologoId: string) {
+    return this.humorService.getHumorFromPatients(psicologoId);
   }
 
   @Roles(Role.Paciente)

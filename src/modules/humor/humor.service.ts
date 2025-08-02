@@ -39,16 +39,65 @@ export class HumorService {
     });
   }
 
-  async getHumorById(id: string) {
-    return this.prisma.humor.findUnique({
-      where: { id },
-      select: {
-        id: true,
-        observacoes: true,
-        escala: true,
-        data: true,
-        pacienteId: true,
+  async getHumorFromPatients(psicologoId: string) {
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const psicologoPacientes = await this.prisma.psicologoPaciente.findMany({
+      where: { psicologoId },
+      include: {
+        paciente: {
+          include: {
+            humor: {
+              where: {
+                data: {
+                  gte: sevenDaysAgo,
+                },
+              },
+              orderBy: { data: 'desc' },
+            },
+            consultas: {
+              where: { psicologoId },
+              orderBy: { data: 'desc' },
+              take: 1,
+            },
+          },
+        },
       },
+    });
+
+    return psicologoPacientes.map((pp) => {
+      const humorsFromLastWeek = pp.paciente.humor;
+      const totalRegistros = humorsFromLastWeek.length;
+      const mediaHumor =
+        totalRegistros > 0
+          ? humorsFromLastWeek.reduce((sum, humor) => sum + humor.escala, 0) /
+            totalRegistros
+          : 0;
+
+      const ultimoHumor = humorsFromLastWeek.map((humor) => ({
+        id: humor.id,
+        data: humor.data.toISOString(),
+        escala: humor.escala,
+        observacoes: humor.observacoes,
+        pacienteId: humor.pacienteId,
+      }));
+
+      const ultimaConsulta =
+        pp.paciente.consultas.length > 0
+          ? pp.paciente.consultas[0].data.toISOString()
+          : null;
+
+      return {
+        id: pp.paciente.id,
+        nome: pp.paciente.nome,
+        email: pp.paciente.email,
+        telefone: pp.paciente.telefone,
+        ultimoHumor,
+        totalRegistros,
+        mediaHumor: Math.round(mediaHumor * 10) / 10,
+        ultimaConsulta,
+      };
     });
   }
 
