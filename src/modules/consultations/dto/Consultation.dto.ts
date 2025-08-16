@@ -1,31 +1,80 @@
-import { IsDate, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsDate,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { Prisma } from 'generated/prisma';
 
-export class CreateConsultationDto implements Prisma.AtendimentoCreateInput {
+export class UpdateConsultationDto implements Prisma.AtendimentoUpdateInput {
+  @Type(() => Date)
+  @IsOptional()
+  @IsDate()
+  data?: Date;
+
+  @IsOptional()
+  @IsString()
+  observacoes?: string;
+}
+
+export class CreateAvailableConsultationDto
+  implements Prisma.AtendimentoDisponivelCreateInput
+{
+  @Type(() => Date)
   @IsNotEmpty()
   @IsDate()
   data: Date;
 
   @IsNotEmpty()
   @IsString()
-  observacoes: string;
+  descricao: string;
+
+  @IsOptional()
+  @IsString()
+  observacoes?: string;
 
   @IsNotEmpty()
-  @IsString()
-  pacienteId: string;
+  @IsNumber()
+  valor: number;
 
   @IsNotEmpty()
   @IsString()
   psicologoId: string;
 
-  paciente: Prisma.PacienteCreateNestedOneWithoutConsultasInput;
-  psicologo: Prisma.PsicologoCreateNestedOneWithoutConsultasInput;
+  psicologo: Prisma.PsicologoCreateNestedOneWithoutAtendimentosDisponiveisInput;
 }
 
-export class UpdateConsultationDto implements Prisma.AtendimentoUpdateInput {
+export class UpdateAvailableConsultationDto
+  implements Prisma.AtendimentoDisponivelUpdateInput
+{
+  @Type(() => Date)
   @IsOptional()
   @IsDate()
   data?: Date;
+
+  @IsOptional()
+  @IsString()
+  descricao?: string;
+
+  @IsOptional()
+  @IsString()
+  observacoes?: string;
+
+  @IsOptional()
+  @IsNumber()
+  valor?: number;
+}
+
+export class ScheduleAvailableConsultationDto {
+  @IsNotEmpty()
+  @IsString()
+  availableConsultationId: string;
+
+  @IsNotEmpty()
+  @IsString()
+  pacienteId: string;
 
   @IsOptional()
   @IsString()

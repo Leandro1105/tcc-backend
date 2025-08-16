@@ -17,7 +17,7 @@ import { Public } from '../auth/decorators/is-public.decorator';
 export class DoctorsController {
   constructor(private readonly doctorsService: DoctorsService) {}
 
-  @Roles(Role.Psicologo)
+  @Roles(Role.Paciente)
   @Get('')
   async findAll() {
     return this.doctorsService.findAll();

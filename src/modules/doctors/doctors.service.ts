@@ -27,14 +27,27 @@ export class DoctorsService {
       select: {
         id: true,
         nome: true,
-        cpf: true,
         crp: true,
-        telefone: true,
-        email: true,
+        endereco: true,
+        numero: true,
+        _count: {
+          select: {
+            pacientes: true,
+            consultas: true,
+          },
+        },
       },
     });
 
-    return doctors;
+    return doctors.map((doctor) => ({
+      id: doctor.id,
+      nome: doctor.nome,
+      crp: doctor.crp,
+      endereco: doctor.endereco,
+      numero: doctor.numero,
+      pacientes: doctor._count.pacientes,
+      atendimentos: doctor._count.consultas,
+    }));
   }
 
   async findOne(

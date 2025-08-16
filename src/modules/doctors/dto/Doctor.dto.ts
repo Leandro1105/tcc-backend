@@ -1,6 +1,7 @@
 import {
   IsDate,
   IsEmail,
+  IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -23,6 +24,18 @@ export class CreateDoctorDto {
   @IsNotEmpty()
   @IsString()
   telefone: string;
+
+  @IsNotEmpty()
+  @IsString()
+  endereco: string;
+
+  @IsNotEmpty()
+  @IsInt()
+  numero: number;
+
+  @IsNotEmpty()
+  @IsString()
+  estado: string;
 
   @IsNotEmpty()
   @IsEmail()
