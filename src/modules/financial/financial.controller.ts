@@ -2,7 +2,11 @@ import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { FinancialService } from './financial.service';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '../auth/enums/role.enum';
-import { CreateFinancialDto, UpdateFinancialDto } from './dto/Financial.dto';
+import {
+  CreateFinancialDto,
+  UpdateFinancialDto,
+  UpdateStatusDto,
+} from './dto/Financial.dto';
 
 @Controller('')
 export class FinancialController {
@@ -45,8 +49,8 @@ export class FinancialController {
   @Patch('status/:id')
   async changePaymentStatus(
     @Param('id') id: string,
-    @Body() data: UpdateFinancialDto,
+    @Body() data: UpdateStatusDto,
   ) {
-    return this.financialService.changePaymentStatus(id, data.status);
+    return this.financialService.changePaymentStatus(id, data.paid);
   }
 }

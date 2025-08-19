@@ -18,4 +18,10 @@ export class DashboardController {
   async getPsychologistDashboard(@Param('psicologoId') psicologoId: string) {
     return this.dashboardService.getPsychologistDashboard(psicologoId);
   }
+
+  @Roles(Role.Psicologo)
+  @Get('financeiro/psicologo/:psicologoId')
+  async getPsychologistPayments(@Param('psicologoId') psicologoId: string) {
+    return this.dashboardService.getPsychologistPayments(psicologoId);
+  }
 }

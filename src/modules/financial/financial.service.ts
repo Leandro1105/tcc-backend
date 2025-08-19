@@ -93,8 +93,8 @@ export class FinancialService {
     });
   }
 
-  async changePaymentStatus(id: string, status: boolean) {
-    const paymentStatus = status ? 'Pago' : 'Pendente';
+  async changePaymentStatus(id: string, paid: boolean) {
+    const paymentStatus = paid ? 'Pago' : 'Pendente';
 
     return this.prisma.pagamento.update({
       where: {

@@ -51,3 +51,8 @@ export class UpdateFinancialDto {
   @IsString()
   atendimentoId: string;
 }
+
+export class UpdateStatusDto {
+  @IsOptional()
+  paid?: boolean;
+}

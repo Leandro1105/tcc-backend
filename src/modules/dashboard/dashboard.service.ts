@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Status } from 'generated/prisma';
 import { PrismaService } from 'src/common/prisma.service';
 
 @Injectable()
@@ -497,5 +498,27 @@ export class DashboardService {
       { categoria: 'Melhoria', pontuacao: Math.round(melhoria) },
       { categoria: 'Engajamento', pontuacao: Math.round(engajamento) },
     ];
+  }
+
+  async getPsychologistPayments(psicologoId: string) {
+    return this.prisma.pagamento.findMany({
+      where: {
+        atendimento: {
+          psicologoId: psicologoId,
+        },
+        status: Status.Pago,
+      },
+      include: {
+        atendimento: {
+          include: {
+            paciente: {
+              select: {
+                nome: true,
+              },
+            },
+          },
+        },
+      },
+    });
   }
 }
