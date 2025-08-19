@@ -22,6 +22,7 @@ export class ActivitiesController {
     return this.activitiesService.registerActivity(data);
   }
 
+  @Roles(Role.Paciente)
   @Get('paciente/:pacienteId')
   async getActivitiesByPacienteId(@Param('pacienteId') pacienteId: string) {
     return this.activitiesService.getActivitiesByPacienteId(pacienteId);

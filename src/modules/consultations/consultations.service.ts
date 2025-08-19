@@ -6,6 +6,7 @@ import {
   UpdateAvailableConsultationDto,
   UpdateConsultationDto,
 } from './dto/Consultation.dto';
+import { Status } from 'generated/prisma';
 
 @Injectable()
 export class ConsultationsService {
@@ -120,6 +121,21 @@ export class ConsultationsService {
         include: {
           paciente: true,
           psicologo: true,
+        },
+      });
+
+      await tx.pagamento.create({
+        data: {
+          valor: availableConsultation.valor,
+          data: scheduledConsultation.data,
+          dataVencimento: scheduledConsultation.data,
+          parcela: 1,
+          status: Status.Pendente,
+          atendimento: {
+            connect: {
+              id: scheduledConsultation.id,
+            },
+          },
         },
       });
 

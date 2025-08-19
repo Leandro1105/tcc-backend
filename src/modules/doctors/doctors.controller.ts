@@ -23,12 +23,6 @@ export class DoctorsController {
     return this.doctorsService.findAll();
   }
 
-  @Roles(Role.Psicologo)
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return this.doctorsService.findOne(id);
-  }
-
   @Public()
   @Post('')
   async create(@Body() data: CreateDoctorDto) {

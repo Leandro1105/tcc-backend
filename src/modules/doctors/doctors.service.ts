@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/prisma.service';
 import { CreateDoctorDto, UpdateDoctorDto } from './dto/Doctor.dto';
 import * as bcrypt from 'bcrypt';
@@ -48,19 +48,6 @@ export class DoctorsService {
       pacientes: doctor._count.pacientes,
       atendimentos: doctor._count.consultas,
     }));
-  }
-
-  async findOne(
-    id: string,
-  ): Promise<{ id: string; email: string; role: string } | null> {
-    const doctor = await this.prisma.psicologo.findUnique({
-      where: { id },
-      select: { id: true, email: true, role: true },
-    });
-
-    if (!doctor) throw new NotFoundException('Psicólogo não encontrado');
-
-    return doctor;
   }
 
   async update(id: string, updateUserDto: UpdateDoctorDto) {

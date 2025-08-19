@@ -27,13 +27,23 @@ export class FinancialService {
     });
   }
 
-  async getPaymentById(id: string) {
-    return this.prisma.pagamento.findUnique({
+  async getPaymentsByPatientId(pacienteId: string) {
+    return this.prisma.pagamento.findMany({
       where: {
-        id,
+        atendimento: {
+          pacienteId: pacienteId,
+        },
       },
       include: {
-        atendimento: true,
+        atendimento: {
+          include: {
+            psicologo: {
+              select: {
+                nome: true,
+              },
+            },
+          },
+        },
       },
     });
   }

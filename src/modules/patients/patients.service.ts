@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/prisma.service';
 import { CreatePacienteDto, UpdatePacienteDto } from './dto/Patient.dto';
 import * as bcrypt from 'bcrypt';
@@ -35,19 +35,6 @@ export class PatientsService {
     });
 
     return pacients;
-  }
-
-  async findOne(
-    id: string,
-  ): Promise<{ id: string; email: string; role: string } | null> {
-    const pacient = await this.prisma.paciente.findUnique({
-      where: { id },
-      select: { id: true, email: true, role: true },
-    });
-
-    if (!pacient) throw new NotFoundException('Paciente não encontrado');
-
-    return pacient;
   }
 
   async update(id: string, updateUserDto: UpdatePacienteDto) {

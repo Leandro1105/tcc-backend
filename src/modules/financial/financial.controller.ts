@@ -14,10 +14,10 @@ export class FinancialController {
     return this.financialService.getPsychologistPayments(psicologoId);
   }
 
-  @Roles(Role.Psicologo)
-  @Get(':id')
-  async getPaymentById(@Param('id') id: string) {
-    return this.financialService.getPaymentById(id);
+  @Roles(Role.Paciente)
+  @Get('paciente/:id')
+  async getPaymentsByPatientId(@Param('id') id: string) {
+    return this.financialService.getPaymentsByPatientId(id);
   }
 
   @Roles(Role.Psicologo)
