@@ -1,17 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/prisma.service';
 import { CreateActivityDto, UpdateActivityDto } from './dto/Activity.dto';
+import { decrypt, encrypt } from 'src/utils/crypto';
 
 @Injectable()
 export class ActivitiesService {
   constructor(private readonly prisma: PrismaService) {}
 
   async registerActivity(activity: CreateActivityDto) {
-    const { pacienteId, ...data } = activity;
+    const { pacienteId, descricao, ...data } = activity;
 
-    return this.prisma.atividade.create({
+    const createdActivity = await this.prisma.atividade.create({
       data: {
         ...data,
+        descricao: encrypt(descricao),
         paciente: { connect: { id: pacienteId } },
       },
       select: {
@@ -22,13 +24,23 @@ export class ActivitiesService {
         pacienteId: true,
       },
     });
+
+    return {
+      ...createdActivity,
+      descricao: decrypt(createdActivity.descricao),
+    };
   }
 
   async getActivitiesByPacienteId(pacienteId: string) {
-    return this.prisma.atividade.findMany({
+    const atividades = await this.prisma.atividade.findMany({
       where: { pacienteId },
       orderBy: { data: 'desc' },
     });
+
+    return atividades.map((atividade) => ({
+      ...atividade,
+      descricao: decrypt(atividade.descricao),
+    }));
   }
 
   async getActivitiesFromPatients(psicologoId: string) {
@@ -59,7 +71,7 @@ export class ActivitiesService {
       atividades: pp.paciente.atividades.map((atividade) => ({
         id: atividade.id,
         titulo: atividade.tipo,
-        descricao: atividade.descricao,
+        descricao: decrypt(atividade.descricao),
         data: atividade.data.toISOString(),
         categoria: atividade.tipo,
         pacienteId: atividade.pacienteId,
@@ -78,9 +90,13 @@ export class ActivitiesService {
   }
 
   async updateActivity(id: string, data: UpdateActivityDto) {
-    return this.prisma.atividade.update({
+    const { descricao, ...rest } = data;
+    const updatedActivity = await this.prisma.atividade.update({
       where: { id },
-      data,
+      data: {
+        ...rest,
+        descricao: encrypt(descricao),
+      },
       select: {
         id: true,
         tipo: true,
@@ -89,5 +105,10 @@ export class ActivitiesService {
         pacienteId: true,
       },
     });
+
+    return {
+      ...updatedActivity,
+      descricao: decrypt(updatedActivity.descricao),
+    };
   }
 }

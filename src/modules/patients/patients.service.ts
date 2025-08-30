@@ -3,19 +3,22 @@ import { PrismaService } from 'src/common/prisma.service';
 import { CreatePacienteDto, UpdatePacienteDto } from './dto/Patient.dto';
 import * as bcrypt from 'bcrypt';
 import { Paciente } from 'generated/prisma';
+import { decrypt, encrypt } from 'src/utils/crypto';
 
 @Injectable()
 export class PatientsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createPacienteDto: CreatePacienteDto) {
-    const { senha } = createPacienteDto;
+    const { cpf, telefone, senha, ...rest } = createPacienteDto;
 
     const hashed = await bcrypt.hash(senha, 10);
 
     return this.prisma.paciente.create({
       data: {
-        ...createPacienteDto,
+        ...rest,
+        cpf: encrypt(cpf),
+        telefone: encrypt(telefone),
         senha: hashed,
       },
       select: { id: true, email: true },
@@ -34,19 +37,26 @@ export class PatientsService {
       },
     });
 
-    return pacients;
+    return pacients.map((pacient) => ({
+      ...pacient,
+      cpf: decrypt(pacient.cpf),
+      telefone: decrypt(pacient.telefone),
+    }));
   }
 
   async update(id: string, updateUserDto: UpdatePacienteDto) {
-    const data = { ...updateUserDto };
+    const { telefone, ...rest } = updateUserDto;
 
     if (updateUserDto.senha) {
-      data.senha = await bcrypt.hash(updateUserDto.senha, 10);
+      rest.senha = await bcrypt.hash(updateUserDto.senha, 10);
     }
 
     return this.prisma.paciente.update({
       where: { id },
-      data: data,
+      data: {
+        ...rest,
+        telefone: encrypt(telefone),
+      },
       select: { id: true, email: true },
     });
   }

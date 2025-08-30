@@ -27,7 +27,7 @@ enum Status {
 model Psicologo {
   id String @id @default(uuid())
   nome String
-  cpf String @unique
+  cpf String
   crp String
   telefone String
   endereco String
@@ -50,7 +50,7 @@ model Psicologo {
 model Paciente {
   id String @id @default(uuid())
   nome String
-  cpf String @unique
+  cpf String
   dataNascimento DateTime
   telefone String
   email String @unique

@@ -34,10 +34,6 @@ export class CreateDoctorDto {
   numero: number;
 
   @IsNotEmpty()
-  @IsString()
-  estado: string;
-
-  @IsNotEmpty()
   @IsEmail()
   email: string;
 

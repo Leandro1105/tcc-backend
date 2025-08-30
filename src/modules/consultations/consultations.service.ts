@@ -145,6 +145,21 @@ export class ConsultationsService {
         },
       });
 
+      await tx.psicologoPaciente.create({
+        data: {
+          psicologo: {
+            connect: {
+              id: availableConsultation.psicologoId,
+            },
+          },
+          paciente: {
+            connect: {
+              id: data.pacienteId,
+            },
+          },
+        },
+      });
+
       return scheduledConsultation;
     });
   }

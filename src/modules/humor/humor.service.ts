@@ -1,17 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/prisma.service';
 import { CreateHumorDto, UpdateHumorDto } from './dto/Humor.dto';
+import { decrypt, encrypt } from 'src/utils/crypto';
 
 @Injectable()
 export class HumorService {
   constructor(private readonly prisma: PrismaService) {}
 
   async registerHumor(humor: CreateHumorDto) {
-    const { pacienteId, ...data } = humor;
+    const { pacienteId, observacoes, ...data } = humor;
 
-    return this.prisma.humor.create({
+    const createdHumor = await this.prisma.humor.create({
       data: {
         ...data,
+        observacoes: encrypt(observacoes),
         paciente: { connect: { id: pacienteId } },
       },
       select: {
@@ -22,13 +24,18 @@ export class HumorService {
         pacienteId: true,
       },
     });
+
+    return {
+      ...createdHumor,
+      observacoes: decrypt(createdHumor.observacoes),
+    };
   }
 
   async getHumorByPacienteId(pacienteId: string) {
     const fifteenDaysAgo = new Date();
     fifteenDaysAgo.setDate(fifteenDaysAgo.getDate() - 15);
 
-    return this.prisma.humor.findMany({
+    const humores = await this.prisma.humor.findMany({
       where: {
         pacienteId,
         data: {
@@ -37,6 +44,11 @@ export class HumorService {
       },
       orderBy: { data: 'desc' },
     });
+
+    return humores.map((humor) => ({
+      ...humor,
+      observacoes: decrypt(humor.observacoes),
+    }));
   }
 
   async getHumorFromPatients(psicologoId: string) {
@@ -79,7 +91,7 @@ export class HumorService {
         id: humor.id,
         data: humor.data.toISOString(),
         escala: humor.escala,
-        observacoes: humor.observacoes,
+        observacoes: decrypt(humor.observacoes),
         pacienteId: humor.pacienteId,
       }));
 
@@ -112,9 +124,13 @@ export class HumorService {
   }
 
   async updateHumor(id: string, data: UpdateHumorDto) {
-    return this.prisma.humor.update({
+    const { observacoes, ...rest } = data;
+    const updatedHumor = await this.prisma.humor.update({
       where: { id },
-      data,
+      data: {
+        ...rest,
+        observacoes: encrypt(observacoes),
+      },
       select: {
         id: true,
         observacoes: true,
@@ -123,5 +139,10 @@ export class HumorService {
         pacienteId: true,
       },
     });
+
+    return {
+      ...updatedHumor,
+      observacoes: decrypt(updatedHumor.observacoes),
+    };
   }
 }

@@ -3,19 +3,22 @@ import { PrismaService } from 'src/common/prisma.service';
 import { CreateDoctorDto, UpdateDoctorDto } from './dto/Doctor.dto';
 import * as bcrypt from 'bcrypt';
 import { Psicologo } from 'generated/prisma';
+import { encrypt } from 'src/utils/crypto';
 
 @Injectable()
 export class DoctorsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createDoctorDto: CreateDoctorDto) {
-    const { senha } = createDoctorDto;
+    const { senha, cpf, telefone, ...rest } = createDoctorDto;
 
     const hashed = await bcrypt.hash(senha, 10);
 
     return this.prisma.psicologo.create({
       data: {
-        ...createDoctorDto,
+        ...rest,
+        cpf: encrypt(cpf),
+        telefone: encrypt(telefone),
         senha: hashed,
       },
       select: { id: true, email: true },
@@ -51,15 +54,18 @@ export class DoctorsService {
   }
 
   async update(id: string, updateUserDto: UpdateDoctorDto) {
-    const data = { ...updateUserDto };
+    const { telefone, ...rest } = updateUserDto;
 
     if (updateUserDto.senha) {
-      data.senha = await bcrypt.hash(updateUserDto.senha, 10);
+      rest.senha = await bcrypt.hash(updateUserDto.senha, 10);
     }
 
     return this.prisma.psicologo.update({
       where: { id },
-      data: data,
+      data: {
+        ...rest,
+        telefone: encrypt(telefone),
+      },
       select: { id: true, email: true },
     });
   }
